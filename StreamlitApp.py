@@ -64,7 +64,7 @@ def build_retrieval_chain(vector, document_chain):
 
 
 # Function to return map name, map description, or map variables based on map id
-def get_map_info(map_id, option, json_file = 'maps_intro.json'):
+def get_map_info(map_id, option, json_file = 'maps_intro_updated.json'):
     with open(json_file) as file:
         data = json.load(file)
         for item in data:
@@ -253,15 +253,16 @@ def main():
     selected_model = st.selectbox("Choose a GPT-4 model", model_options)
 
     # Embedding model selection dropdown
-    embedding_model_options = ["text-embedding-3-large", "text-embedding-3-small", "text-embedding-ada-002"]
-    selected_embedding_model = st.selectbox("Choose an OpenAI embedding model", embedding_model_options)
+    #embedding_model_options = ["text-embedding-3-large", "text-embedding-3-small", "text-embedding-ada-002"]
+    #selected_embedding_model = st.selectbox("Choose an OpenAI embedding model", embedding_model_options)
+    selected_embedding_model = "text-embedding-3-large"
 
     # Map ID selection dropdown
     map_id_options = [2, 4]
     selected_map_id = st.selectbox("Choose a map ID", map_id_options)
 
     # Query option selection dropdown
-    query_options = ["article_relevance", "key_relationships", "additional_relationships"]
+    query_options = ["key_relationships", "additional_relationships", "article_relevance"]
     selected_query_option = st.selectbox("Choose query option", query_options)
 
     # Submit button
@@ -275,7 +276,7 @@ def main():
             doc_text += page.extract_text()
 
         # Build the pipeline 
-        answer_relevance, remove_references = create_query_pipeline(
+        answer, remove_references = create_query_pipeline(
             llm_model=selected_model,
             doc_text=doc_text,
             embedding_model=selected_embedding_model,
@@ -283,7 +284,7 @@ def main():
             query_option=selected_query_option)
 
         # Display the answer
-        st.write(answer_relevance)
+        st.write(answer)
 
 if __name__ == '__main__':
     main()
